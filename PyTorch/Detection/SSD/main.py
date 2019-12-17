@@ -74,6 +74,8 @@ def make_parser():
                         help='path to model checkpoint file')
     parser.add_argument('--save', action='store_true',
                         help='save model checkpoints')
+    parser.add_argument('--save-path', '--sp', type=str, default='./checkpoints',
+                        help='path to save checkpoints')
     parser.add_argument('--mode', type=str, default='training',
                         choices=['training', 'evaluation', 'benchmark-training', 'benchmark-inference'])
     parser.add_argument('--evaluation', nargs='*', type=int, default=[21, 31, 37, 42, 48, 53, 59, 64],
@@ -222,7 +224,7 @@ def train(train_loop_func, logger, args):
                 obj['model'] = ssd300.module.state_dict()
             else:
                 obj['model'] = ssd300.state_dict()
-            torch.save(obj, './models/epoch_{}.pt'.format(epoch))
+            torch.save(obj, '{}/epoch_{}.pt'.format(args.save_path, epoch))
         train_loader.reset()
     print('total training time: {}'.format(total_time))
 
@@ -231,7 +233,7 @@ if __name__ == "__main__":
     parser = make_parser()
     args = parser.parse_args()
     if args.local_rank == 0:
-        os.makedirs('./models', exist_ok=True)
+        os.makedirs(args.save_path, exist_ok=True)
 
     torch.backends.cudnn.benchmark = True
 
