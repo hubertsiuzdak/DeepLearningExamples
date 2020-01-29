@@ -58,8 +58,16 @@ def generate_mean_std(args):
 def make_parser():
     parser = ArgumentParser(description="Train Single Shot MultiBox Detector"
                                         " on COCO")
-    parser.add_argument('--data', '-d', type=str, default='/coco', required=True,
-                        help='path to test and training data files')
+    parser.add_argument('--data', '-d', type=str, required=True,
+                        help='path to the root folder')
+    parser.add_argument('--train_dir', type=str, default='train',
+                        help='path to the directory containing training files')
+    parser.add_argument('--val_dir', type=str, default='val',
+                        help='path to the directory containing validation files')
+    parser.add_argument('--train_labels', type=str, default='labels/bdd100k_labels_images_det_coco_train.json',
+                        help='path to the JSON file containing annotations for training')
+    parser.add_argument('--val_labels', type=str, default='labels/bdd100k_labels_images_det_coco_val.json',
+                        help='path to the JSON file containing annotations for validation')
     parser.add_argument('--epochs', '-e', type=int, default=65,
                         help='number of epochs for training')
     parser.add_argument('--batch-size', '--bs', type=int, default=32,

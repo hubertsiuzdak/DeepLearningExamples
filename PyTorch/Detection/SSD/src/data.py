@@ -24,8 +24,8 @@ from src.coco import COCO
 from src.coco_pipeline import COCOPipeline, DALICOCOIterator
 
 def get_train_loader(args, local_seed):
-    train_annotate = os.path.join(args.data, "labels/bdd100k_labels_images_det_coco_train.json")
-    train_coco_root = os.path.join(args.data, "images/100k/train")
+    train_annotate = os.path.join(args.data, args.train_labels)
+    train_coco_root = os.path.join(args.data, args.train_dir)
 
     train_pipe = COCOPipeline(args.batch_size, args.local_rank, train_coco_root,
                     train_annotate, args.N_gpu, num_threads=args.num_workers,
@@ -41,8 +41,8 @@ def get_val_dataset(args):
     dboxes = dboxes300_coco()
     val_trans = SSDTransformer(dboxes, (300, 300), val=True)
 
-    val_annotate = os.path.join(args.data, "labels/bdd100k_labels_images_det_coco_val.json")
-    val_coco_root = os.path.join(args.data, "images/100k/val")
+    val_annotate = os.path.join(args.data, args.val_labels)
+    val_coco_root = os.path.join(args.data, args.val_dir)
 
     val_coco = COCODetection(val_coco_root, val_annotate, val_trans)
     return val_coco
@@ -63,6 +63,6 @@ def get_val_dataloader(dataset, args):
     return val_dataloader
 
 def get_coco_ground_truth(args):
-    val_annotate = os.path.join(args.data, "labels/bdd100k_labels_images_det_coco_val.json")
+    val_annotate = os.path.join(args.data, args.val_labels)
     cocoGt = COCO(annotation_file=val_annotate)
     return cocoGt
